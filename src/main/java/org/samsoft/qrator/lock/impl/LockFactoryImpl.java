@@ -16,7 +16,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  */
 public class LockFactoryImpl implements LockFactory {
 
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final ExecutorService executorService;
     private final CuratorFramework curatorFramework;
     private final String lockRoot;
 
@@ -25,6 +25,18 @@ public class LockFactoryImpl implements LockFactory {
      * @param lockRoot         "chroot" for all lock path in Zookeeper
      */
     public LockFactoryImpl(CuratorFramework curatorFramework, String lockRoot) {
+        this.curatorFramework = curatorFramework;
+        this.lockRoot = lockRoot;
+        executorService = Executors.newCachedThreadPool();
+    }
+
+    /**
+     * @param executorService  {@link ExecutorService} implementation to use while acquiring lock using 'tryLock'
+     * @param curatorFramework {@link CuratorFramework} instance whose lifecyle to be managed by client code.
+     * @param lockRoot
+     */
+    public LockFactoryImpl(ExecutorService executorService, CuratorFramework curatorFramework, String lockRoot) {
+        this.executorService = executorService;
         this.curatorFramework = curatorFramework;
         this.lockRoot = lockRoot;
     }
