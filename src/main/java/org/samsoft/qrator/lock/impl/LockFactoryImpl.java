@@ -1,9 +1,9 @@
-package org.samsoft.qrator.impl;
+package org.samsoft.qrator.lock.impl;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.framework.recipes.locks.InterProcessReadWriteLock;
-import org.samsoft.qrator.LockFactory;
+import org.samsoft.qrator.lock.LockFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

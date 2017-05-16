@@ -1,4 +1,4 @@
-package org.samsoft.qrator;
+package org.samsoft.qrator.lock;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;

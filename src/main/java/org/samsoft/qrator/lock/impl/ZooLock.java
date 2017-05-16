@@ -1,4 +1,4 @@
-package org.samsoft.qrator.impl;
+package org.samsoft.qrator.lock.impl;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
