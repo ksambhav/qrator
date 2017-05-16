@@ -25,7 +25,6 @@ public class LockFactoryImpl implements LockFactory {
         this.lockRoot = lockRoot;
     }
 
-
     @Override
     public Lock getLock(String lockKey) {
         return new ZooLock(curatorFramework, executorService, this.lockRoot + "/" + lockKey);

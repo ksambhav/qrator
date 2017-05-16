@@ -10,13 +10,24 @@ public class LockAcquirer implements Runnable {
 
 
     private final Lock lock;
+    private long sleep;
 
     public LockAcquirer(Lock lock) {
+        this(lock, 0);
+    }
+
+    public LockAcquirer(Lock lock, long sleep) {
         this.lock = lock;
+        this.sleep = sleep;
     }
 
     @Override
     public void run() {
         this.lock.lock();
+        try {
+            Thread.sleep(sleep);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
