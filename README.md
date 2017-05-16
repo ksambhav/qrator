@@ -1,0 +1,1 @@
+Simple facade around the CuratorFramework for distributed locks and leader election recipes.
