@@ -20,6 +20,10 @@ public class LockFactoryImpl implements LockFactory {
     private final CuratorFramework curatorFramework;
     private final String lockRoot;
 
+    /**
+     * @param curatorFramework {@link CuratorFramework} instance whose lifecyle to be managed by client code.
+     * @param lockRoot         "chroot" for all lock path in Zookeeper
+     */
     public LockFactoryImpl(CuratorFramework curatorFramework, String lockRoot) {
         this.curatorFramework = curatorFramework;
         this.lockRoot = lockRoot;
@@ -29,6 +33,7 @@ public class LockFactoryImpl implements LockFactory {
     public Lock getLock(String lockKey) {
         return new ZooLock(curatorFramework, executorService, this.lockRoot + "/" + lockKey);
     }
+
     @Override
     public ReadWriteLock getReadWriteLock(String lockKey) {
 

@@ -41,7 +41,7 @@ public class LockFactoryTest {
 
     @Test
     public void testLock() {
-        Lock lock = lockFactory.getLock("resource-testLock");
+        Lock lock = lockFactory.getLock("resource-testLock" + System.currentTimeMillis());
         Assert.assertNotNull(lock);
         boolean hasLock = lock.tryLock();
         Assert.assertTrue(hasLock);
@@ -49,7 +49,7 @@ public class LockFactoryTest {
 
     @Test
     public void testTwoThreadLock() throws ExecutionException, InterruptedException {
-        Lock lock = lockFactory.getLock("resource-testTwoThreadLock");
+        Lock lock = lockFactory.getLock("resource-testTwoThreadLock" + System.currentTimeMillis());
         Thread t1 = new Thread(new LockAcquirer(lock, 5000)); // acuire lck and sleep on it fot 5s
         t1.start();
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -60,7 +60,7 @@ public class LockFactoryTest {
 
     @Test(expected = RuntimeException.class)
     public void testInvalidUnlock() throws Exception {
-        Lock lockA = lockFactory.getLock("resource-testInvalidUnlock");
+        Lock lockA = lockFactory.getLock("resource-testInvalidUnlock" + System.currentTimeMillis());
         Assert.assertNotNull(lockA);
         Thread t1 = new Thread(new LockAcquirer(lockA));
         t1.start();
