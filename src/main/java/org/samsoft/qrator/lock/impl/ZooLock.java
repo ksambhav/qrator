@@ -4,7 +4,10 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.zookeeper.CreateMode;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
@@ -49,39 +52,22 @@ public class ZooLock implements Lock {
         while (!locked) {
             locked = tryLock(1, TimeUnit.SECONDS);
         }
-
     }
 
     @Override
     public boolean tryLock() {
-        try {
-            return tryLock(1, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return false;
-        }
+        return tryLock(1, TimeUnit.SECONDS);
     }
 
     @Override
-    public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+    public boolean tryLock(long time, TimeUnit unit) {
         Future<String> future = null;
         try {
             long startTime = System.currentTimeMillis();
-
-            future = this.mutexTaskExecutor.submit(new Callable<String>() {
-
-                @Override
-                public String call() throws Exception {
-                    return ZooLock.this.curatorFramework.create().creatingParentContainersIfNeeded().withProtection()
-                            .withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(ZooLock.this.path);
-                }
-
-            });
-
+            future = this.mutexTaskExecutor.submit(() -> ZooLock.this.curatorFramework.create().creatingParentContainersIfNeeded().withProtection()
+                    .withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(ZooLock.this.path));
             long waitTime = unit.toMillis(time);
-
             String ourPath = future.get(waitTime, TimeUnit.MILLISECONDS);
-
             if (ourPath == null) {
                 future.cancel(true);
                 return false;
@@ -91,8 +77,6 @@ public class ZooLock implements Lock {
             }
         } catch (TimeoutException e) {
             future.cancel(true);
-            return false;
-        } catch (ExecutionException e) {
             return false;
         } catch (Exception e) {
             return false;

@@ -21,7 +21,7 @@ public class LockFactoryImpl implements LockFactory {
     private final String lockRoot;
 
     /**
-     * @param curatorFramework {@link CuratorFramework} instance whose lifecyle to be managed by client code.
+     * @param curatorFramework {@link CuratorFramework} instance whose lifecycle to be managed by client code.
      * @param lockRoot         "chroot" for all lock path in Zookeeper
      */
     public LockFactoryImpl(CuratorFramework curatorFramework, String lockRoot) {
@@ -32,8 +32,7 @@ public class LockFactoryImpl implements LockFactory {
 
     /**
      * @param executorService  {@link ExecutorService} implementation to use while acquiring lock using 'tryLock'
-     * @param curatorFramework {@link CuratorFramework} instance whose lifecyle to be managed by client code.
-     * @param lockRoot
+     * @param curatorFramework {@link CuratorFramework} instance whose lifecycle to be managed by client code.
      */
     public LockFactoryImpl(ExecutorService executorService, CuratorFramework curatorFramework, String lockRoot) {
         this.executorService = executorService;
@@ -48,14 +47,11 @@ public class LockFactoryImpl implements LockFactory {
 
     @Override
     public ReadWriteLock getReadWriteLock(String lockKey) {
-
         final String actualLockPath = this.lockRoot + "/" + lockKey;
         InterProcessReadWriteLock interProcessReadWriteLock = new InterProcessReadWriteLock(curatorFramework,
                 actualLockPath);
-
         InterProcessMutex readLock = interProcessReadWriteLock.readLock();
         InterProcessMutex writeLock = interProcessReadWriteLock.writeLock();
-
         return new ZooReadWriteLock(new ZooLock(curatorFramework, readLock, executorService, actualLockPath),
                 new ZooLock(curatorFramework, writeLock, executorService, actualLockPath));
     }

@@ -6,19 +6,16 @@ import org.apache.curator.framework.recipes.leader.LeaderSelectorListenerAdapter
 import org.samsoft.qrator.leader.Candidate;
 import org.samsoft.qrator.leader.LeaderElectionListener;
 
-import java.io.IOException;
-
 /**
  * @author kumarsambhav.jain
  * @since 5/16/2017.
  */
-public class CandidateImpl extends LeaderSelectorListenerAdapter implements Candidate {
+class CandidateImpl extends LeaderSelectorListenerAdapter implements Candidate {
 
-    private LeaderSelector leaderSelector;
     private final CuratorFramework curatorFrameWork;
     private final String leaderRoot;
-    private LeaderElectionListener listener;
     private final String resource;
+    private LeaderElectionListener listener;
 
     public CandidateImpl(CuratorFramework curatorFrameWork, String leaderRoot, String resource) {
         this.curatorFrameWork = curatorFrameWork;
@@ -28,7 +25,7 @@ public class CandidateImpl extends LeaderSelectorListenerAdapter implements Cand
 
     @Override
     public void applyForLeadership(boolean repeatedly, LeaderElectionListener listener) {
-        leaderSelector = new LeaderSelector(curatorFrameWork, leaderRoot + "/" + this.resource, this);
+        LeaderSelector leaderSelector = new LeaderSelector(curatorFrameWork, leaderRoot + "/" + this.resource, this);
         if (repeatedly) {
             leaderSelector.autoRequeue();
         }
@@ -37,12 +34,12 @@ public class CandidateImpl extends LeaderSelectorListenerAdapter implements Cand
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         this.listener.onElected();
     }
 
     @Override
-    public void takeLeadership(CuratorFramework client) throws Exception {
+    public void takeLeadership(CuratorFramework client) {
         this.listener.onElected();
     }
 }

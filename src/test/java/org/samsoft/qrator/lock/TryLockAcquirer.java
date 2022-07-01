@@ -10,15 +10,15 @@ import java.util.concurrent.locks.Lock;
 public class TryLockAcquirer implements Callable<Boolean> {
 
     private final Lock lock;
-    private long sleep;
+    private final long sleep;
+
+    public TryLockAcquirer(Lock lock) {
+        this(lock, 0);
+    }
 
     public TryLockAcquirer(Lock lock, long sleep) {
         this.lock = lock;
         this.sleep = sleep;
-    }
-
-    public TryLockAcquirer(Lock lock) {
-        this(lock, 0);
     }
 
     @Override

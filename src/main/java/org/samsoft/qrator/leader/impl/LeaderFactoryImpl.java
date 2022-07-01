@@ -8,7 +8,7 @@ import org.samsoft.qrator.leader.LeaderFactory;
  * @author kumarsambhav.jain
  * @since 5/16/2017.
  */
-public class LeaderFactoryImpl implements LeaderFactory {
+class LeaderFactoryImpl implements LeaderFactory {
 
     private final CuratorFramework curatorFrameWork;
     private final String rootLeaderPath;

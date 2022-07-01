@@ -8,9 +8,8 @@ import java.util.concurrent.locks.Lock;
  */
 public class LockAcquirer implements Runnable {
 
-
     private final Lock lock;
-    private long sleep;
+    private final long sleep;
 
     public LockAcquirer(Lock lock) {
         this(lock, 0);
